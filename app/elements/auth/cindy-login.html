@@ -1,6 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/paper-styles/typography.html">
 
+
 <dom-module id="cindy-login">
   <template>
     <style include="shared-styles">
@@ -38,11 +39,16 @@
         border: 0;
       }
       .google {        
-        background: url('/images/login/google.png') transparent 5px 50% no-repeat;
+        background: url('http://icons.iconarchive.com/icons/marcus-roberto/google-play/512/Google-plus-icon.png') transparent 5px 50% no-repeat;
         background-size: 28px;
       }
       .facebook {
-        background: url('/images/login/facebook.png') transparent 5px 50% no-repeat;
+        background: url('https://cdn0.iconfinder.com/data/icons/social-flat-rounded-rects/512/facebook-512.png') transparent 5px 50% no-repeat;
+        background-size: 28px;
+      }
+      .signin {
+         background: url('http://www.thesilverside.com/assets/default/images/login-icon.png') transparent 5px 50% no-repeat;
+        background-color:white;
         background-size: 28px;
       }
       .dropdown-content {
@@ -77,10 +83,16 @@
         </paper-menu>
       </paper-menu-button>
       <span class="user-email"><a href$="[[user.google.cachedUserProfile.link]]" target="_new">[[user.google.displayName]]</a></span>
+      <span class="user-email"><a href$="[[user.facebook.cachedUserProfile.link]]" target="_new">[[user.facebook.displayName]]</a></span>
     </div>
     <paper-dialog id="loginDialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
       <h2 class="login-title">Log In</h2>
+      <div class = "login">
+        <paper-input id = "login_email" label="Email"></paper-input>
+        <paper-input id = "login_password" label="password input" type="password"></paper-input>
+      </div>
       <div class="button-container">
+        <paper-button id="loginButton" raised class="signin" style="width:230px;padding-left:30px;">Login</paper-button>
         <paper-button id="loginFacebookButton" raised class="facebook" on-tap="loginFacebook" style="width:230px;padding-left:30px;"><span class="login-icon facebook"></span>Sign in with Facebook</paper-button>
         <paper-button id="loginGoogleButton" raised class="google" on-tap="loginGoogle" style="width:230px;padding-left:30px;"><span class="login-icon google"></span>Sign in with Google</paper-button>
       </div>
@@ -124,7 +136,7 @@
         loginGoogle: function() {
           this.login('google');
         },
-         loginFacebook: function() {
+        loginFacebook: function() {
           this.login('facebook');
         },
         logout: function() {
@@ -132,7 +144,11 @@
           this.showLoginContainer(true);
         },
         userUpdatedHandler: function() {
-          this.gravatar = this.user.google.profileImageURL;
+          if (this.user.google) {
+            this.gravatar = this.user.google.profileImageURL;
+          } else {
+            this.gravatar = this.user.facebook.profileImageURL;
+          }          
           this.$.loginDialog.close();
           this.showLoginContainer(false);
         },
